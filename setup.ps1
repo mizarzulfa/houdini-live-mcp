@@ -129,10 +129,12 @@ try {
         # PowerShell 5's JSON formatting is ugly (column-aligned indentation).
         # Reformat with the Python that uv sync just installed; best effort,
         # the file is already valid JSON either way.
+        # -I (isolated) shields it from any PYTHONHOME/PYTHONPATH the user has
+        # set globally for DCC tools, which would otherwise break the venv.
         $py = Join-Path $server ".venv\Scripts\python.exe"
         if (Test-Path $py) {
             try {
-                & $py -c "import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding='utf-8-sig')); open(p,'w',encoding='utf-8').write(json.dumps(d,indent=2))" $cfgPath 2>$null
+                & $py -I -c "import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding='utf-8-sig')); open(p,'w',encoding='utf-8').write(json.dumps(d,indent=2))" $cfgPath 2>$null
             } catch {}
         }
         Info "previous config backed up to claude_desktop_config.json.bak"
