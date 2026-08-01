@@ -101,7 +101,19 @@ The bridge only listens to programs that know a shared password. Out of the box 
 
 ### Step 4: Tell Claude Desktop about the servers
 
-Open Claude Desktop → **Settings → Developer → Edit Config**. Add this, fixing the two kinds of paths for your machine:
+Open Claude Desktop → **Settings → Developer → Edit Config**. This opens a file called `claude_desktop_config.json`.
+
+> **Always use that Settings button to find the file.** Its real location is different on every machine, so don't copy a path from a tutorial:
+>
+> | Your setup | Where the file usually is |
+> |---|---|
+> | Windows (normal install) | `%APPDATA%\Claude\claude_desktop_config.json` |
+> | Windows (Microsoft Store install) | `C:\Users\<you>\AppData\Local\Packages\Claude_<random-id>\LocalCache\Roaming\Claude\claude_desktop_config.json` |
+> | Mac | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+>
+> The `<random-id>` part is unique per machine. The Settings button always lands in the right place, whatever your install type.
+
+Add this to the file, replacing the two kinds of paths with the real ones on **your** machine:
 
 ```json
 {
@@ -118,8 +130,10 @@ Open Claude Desktop → **Settings → Developer → Edit Config**. Add this, fi
 }
 ```
 
-- `command` = the full path to `uv` on your computer
-- `--directory` = the full path to this project's `server` folder
+- `command` = the full path to `uv` on your computer. Don't know it? Run `where uv` in a terminal (Mac/Linux: `which uv`)
+- `--directory` = the full path to this project's `server` folder, wherever you put it in Step 1
+
+Nothing else in this project is machine-specific: these two paths in the config are the only things you personalize (plus the password from Step 3).
 
 Now restart **both** apps: Claude Desktop first, then Houdini.
 
