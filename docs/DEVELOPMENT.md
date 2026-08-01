@@ -116,7 +116,7 @@ Use the full path to `uv`; Claude Desktop doesn't inherit your shell `PATH`.
 
 ### 5. Restart both apps and verify
 
-1. Restart Claude Desktop (it spawns the two servers).
+1. Restart Claude Desktop (it spawns the two servers), then enable both connectors in a chat: paperclip button → Connectors → toggle **houdini-docs** and **houdini-live** on.
 2. Start Houdini; the Python Shell should print:
    ```
    [mcp-bridge] listening on http://127.0.0.1:8008  (endpoints: /mcp/ping, /mcp/exec)
