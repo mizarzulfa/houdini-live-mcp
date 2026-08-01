@@ -1,0 +1,11 @@
+[project]
+name = "houdini-live-mcp"
+version = "0.1.0"
+description = "MCP servers connecting Claude Desktop to SideFX Houdini: local docs search + live session introspection"
+license = { text = "MIT" }
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.28.0,<2",  # 2.0 removed mcp.server.fastmcp; code targets the 1.x FastMCP API
+]

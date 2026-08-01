@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+# Houdini junk that tends to appear near these files
+backup/
+*.hip.bak
+.claude_eyes/
+preview/
+
+# OS
+Thumbs.db
+.DS_Store
