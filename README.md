@@ -131,7 +131,7 @@ Nothing else in this project is machine-specific: these two paths in the config 
 ### Step 4: Restart and switch them on
 
 1. Restart **both** apps: Claude Desktop first, then Houdini.
-2. In Claude Desktop, open a chat and click the **paperclip** button (where you attach files), then **Connectors**.
+2. In Claude Desktop, open a chat and click the **+** (plus) button, then **Connectors**.
 3. You should now see **houdini-docs** and **houdini-live** in the list. Turn both toggles **on**.
 
 That's it. They stay on for future chats.
@@ -159,7 +159,7 @@ flowchart TD
 |---|---|
 | Claude says it can't reach Houdini | Is Houdini actually open? Restart it and look for the `[mcp-bridge] listening` line in the Python Shell |
 | No `[mcp-bridge]` line at startup | The two files from Step 2 aren't in the right folders. Re-check the table |
-| Claude ignores Houdini questions | The toggles from Step 4 are off. Paperclip button → Connectors → turn both on |
+| Claude ignores Houdini questions | The toggles from Step 4 are off. **+** (plus) button → Connectors → turn both on |
 | houdini-docs / houdini-live missing from the Connectors list | The config from Step 3 has a wrong path. Both paths must be full absolute paths |
 | "bad token" error | Delete the hidden file `.houdini_mcp_token` in your user folder (e.g. `C:\Users\you`), then restart Houdini and Claude Desktop. It regenerates itself |
 | Docs search says "no doc server reachable" | Just open Houdini. Its manual server starts with the app |
