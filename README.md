@@ -65,7 +65,6 @@ Three steps. About 5 minutes.
 
 - **Houdini** (built on 21.0; other recent versions likely work)
 - **Claude Desktop**: [claude.ai/download](https://claude.ai/download)
-- **uv**: a small tool that runs the servers. Install: [docs.astral.sh/uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 Then download this project:
 
@@ -81,6 +80,7 @@ In the project folder, right-click **setup.ps1** and choose **Run with PowerShel
 
 It does all the fiddly parts for you:
 
+- installs [uv](https://docs.astral.sh/uv/) (the tool that runs the servers) if it's not already there
 - prepares the two server programs
 - copies the two Houdini files into your Houdini settings folder
 - finds Claude Desktop's config file (its location is different on every machine) and registers both servers, backing up your old config first

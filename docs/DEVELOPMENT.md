@@ -70,7 +70,7 @@ houdini-live-mcp/
 
 ## Installation
 
-On Windows, `setup.ps1` at the repo root automates sections 1, 2, and 4 below: it locates uv, runs `uv sync`, copies the two Houdini files into the newest `houdini<major>.<minor>` pref dir (refusing to overwrite a foreign `uiready.py`), and merges both server entries into `claude_desktop_config.json` wherever the install keeps it (probing both the normal and the Microsoft Store location), with a `.bak` backup. `-DryRun` previews without writing. The sections below are the manual path for Mac/Linux, or for debugging what the script did.
+On Windows, `setup.ps1` at the repo root automates sections 1, 2, and 4 below: it locates uv (installing it via the official astral.sh installer if absent), runs `uv sync`, copies the two Houdini files into the newest `houdini<major>.<minor>` pref dir (refusing to overwrite a foreign `uiready.py`), and merges both server entries into `claude_desktop_config.json` wherever the install keeps it (probing both the normal and the Microsoft Store location), with a `.bak` backup. `-DryRun` previews without writing. The sections below are the manual path for Mac/Linux, or for debugging what the script did.
 
 ### 1. Clone and resolve the server environment
 

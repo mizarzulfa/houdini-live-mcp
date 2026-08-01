@@ -32,12 +32,35 @@ try {
     if ($DryRun) { Write-Host "(dry run: nothing will be changed)" -ForegroundColor Yellow }
     Write-Host ""
 
-    # --- 1. find uv ---------------------------------------------------------
-    $uv = $null
-    $cmd = Get-Command uv.exe -ErrorAction SilentlyContinue
-    if ($cmd) { $uv = $cmd.Source }
-    elseif (Test-Path "$env:USERPROFILE\.local\bin\uv.exe") { $uv = "$env:USERPROFILE\.local\bin\uv.exe" }
-    if (-not $uv) { Fail "uv was not found. Install it from https://docs.astral.sh/uv/ then run this again." }
+    # --- 1. find uv (install it automatically if missing) -------------------
+    function Find-Uv {
+        $c = Get-Command uv.exe -ErrorAction SilentlyContinue
+        if ($c) { return $c.Source }
+        if (Test-Path "$env:USERPROFILE\.local\bin\uv.exe") { return "$env:USERPROFILE\.local\bin\uv.exe" }
+        return $null
+    }
+    $uv = Find-Uv
+    if (-not $uv) {
+        if ($DryRun) {
+            Info "uv is not installed; a real run would install it automatically"
+            $uv = "$env:USERPROFILE\.local\bin\uv.exe"
+        } else {
+            Info "uv is not installed yet; installing it now (official installer from astral.sh)..."
+            # Run in a child PowerShell so the installer's own output and error
+            # handling can't disturb this script. Judge success by finding uv after.
+            $prevEAP = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -Command `
+                "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm https://astral.sh/uv/install.ps1 | iex" 2>&1 |
+                ForEach-Object { Write-Host ("    " + $_) }
+            $ErrorActionPreference = $prevEAP
+            $uv = Find-Uv
+            if (-not $uv) {
+                Fail "automatic uv install did not work (no internet?). Install it manually from https://docs.astral.sh/uv/ then run this again."
+            }
+            Done "installed uv"
+        }
+    }
     Done "found uv: $uv"
 
     # --- 2. locate the server folder (it sits next to this script) ----------
