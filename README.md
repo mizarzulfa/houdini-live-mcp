@@ -43,10 +43,12 @@ Plain version: Claude Desktop starts the two small programs in the `server/` fol
 ```
 houdini-live-mcp/
 │
+├── setup.ps1        ← the installer: run this once (Windows)
+│
 ├── server/          ← the two programs Claude Desktop runs
 │                      (leave them here, wherever you cloned this)
 │
-├── houdini/         ← two small files YOU copy into Houdini's settings folder
+├── houdini/         ← two small files that go into Houdini's settings folder
 │   ├── scripts/python/houdini_mcp_bridge.py   (the bridge)
 │   └── python3.11libs/uiready.py              (auto-starts the bridge)
 │
@@ -57,7 +59,7 @@ houdini-live-mcp/
 
 ## Setup
 
-Four steps. About 10 minutes.
+Three steps. About 5 minutes.
 
 ### Step 1: What you need first
 
@@ -73,62 +75,24 @@ git clone https://github.com/mizarzulfa/houdini-live-mcp.git
 
 (or click **Code → Download ZIP** on GitHub and unzip it somewhere you'll keep it)
 
-### Step 2: Copy two files into Houdini's settings folder
+### Step 2: Run the installer
 
-Houdini keeps your personal settings in a folder like this (match the number to your version):
+In the project folder, right-click **setup.ps1** and choose **Run with PowerShell**.
 
-- **Windows:** `Documents\houdini21.0`
-- **Mac:** `~/Library/Preferences/houdini/21.0`
-- **Linux:** `~/houdini21.0`
+It does all the fiddly parts for you:
 
-Copy the two files from this project's `houdini/` folder into it, keeping the same sub-folders:
+- prepares the two server programs
+- copies the two Houdini files into your Houdini settings folder
+- finds Claude Desktop's config file (its location is different on every machine) and registers both servers, backing up your old config first
 
-| Copy this file | Into this place |
-|---|---|
-| `houdini/scripts/python/houdini_mcp_bridge.py` | `Documents\houdini21.0\scripts\python\` |
-| `houdini/python3.11libs/uiready.py` | `Documents\houdini21.0\python3.11libs\` |
+When it says **Setup complete**, you're done here. It's safe to run again any time.
 
-If a folder doesn't exist yet, just create it.
-
-> Rare case: if that last folder already contains a file named `uiready.py`, don't replace it (something else on your machine uses it too). [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) explains how to combine them. Most people will never hit this.
-
-### Step 3: Tell Claude Desktop about the servers
-
-Open Claude Desktop → **Settings → Developer → Edit Config**. This opens a file called `claude_desktop_config.json`.
-
-> **Always use that Settings button to find the file.** Its real location is different on every machine, so don't copy a path from a tutorial:
+> Window flashes open and closes, or Windows complains about scripts? Open PowerShell in the folder and run:
+> `powershell -ExecutionPolicy Bypass -File .\setup.ps1`
 >
-> | Your setup | Where the file usually is |
-> |---|---|
-> | Windows (normal install) | `%APPDATA%\Claude\claude_desktop_config.json` |
-> | Windows (Microsoft Store install) | `C:\Users\<you>\AppData\Local\Packages\Claude_<random-id>\LocalCache\Roaming\Claude\claude_desktop_config.json` |
-> | Mac | `~/Library/Application Support/Claude/claude_desktop_config.json` |
->
-> The `<random-id>` part is unique per machine. The Settings button always lands in the right place, whatever your install type.
+> On Mac or Linux? There's no script yet; follow the short manual steps in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
-Add this to the file, replacing the two kinds of paths with the real ones on **your** machine:
-
-```json
-{
-  "mcpServers": {
-    "houdini-docs": {
-      "command": "C:\\Users\\YOU\\.local\\bin\\uv.exe",
-      "args": ["--directory", "C:\\path\\to\\houdini-live-mcp\\server", "run", "houdini_docs_mcp.py"]
-    },
-    "houdini-live": {
-      "command": "C:\\Users\\YOU\\.local\\bin\\uv.exe",
-      "args": ["--directory", "C:\\path\\to\\houdini-live-mcp\\server", "run", "houdini_live_mcp.py"]
-    }
-  }
-}
-```
-
-- `command` = the full path to `uv` on your computer. Don't know it? Run `where uv` in a terminal (Mac/Linux: `which uv`)
-- `--directory` = the full path to this project's `server` folder, wherever you put it in Step 1
-
-Nothing else in this project is machine-specific: these two paths in the config are the only things you personalize.
-
-### Step 4: Restart and switch them on
+### Step 3: Restart and switch them on
 
 1. Restart **both** apps: Claude Desktop first, then Houdini.
 2. In Claude Desktop, open a chat and click the **+** (plus) button, then **Connectors**.
@@ -136,7 +100,7 @@ Nothing else in this project is machine-specific: these two paths in the config 
 
 That's it. They stay on for future chats.
 
-> Not in the list at all? The config from Step 3 didn't load: re-check both paths and restart Claude Desktop again.
+> Not in the list at all? Run setup.ps1 again and read its output, then restart Claude Desktop again.
 
 ---
 
@@ -158,9 +122,9 @@ flowchart TD
 | Problem | Fix |
 |---|---|
 | Claude says it can't reach Houdini | Is Houdini actually open? Restart it and look for the `[mcp-bridge] listening` line in the Python Shell |
-| No `[mcp-bridge]` line at startup | The two files from Step 2 aren't in the right folders. Re-check the table |
-| Claude ignores Houdini questions | The toggles from Step 4 are off. **+** (plus) button → Connectors → turn both on |
-| houdini-docs / houdini-live missing from the Connectors list | The config from Step 3 has a wrong path. Both paths must be full absolute paths |
+| No `[mcp-bridge]` line at startup | Run setup.ps1 again; it re-copies the Houdini files and tells you where they went |
+| Claude ignores Houdini questions | The toggles from Step 3 are off. **+** (plus) button → Connectors → turn both on |
+| houdini-docs / houdini-live missing from the Connectors list | Run setup.ps1 again (it rewrites the config), then restart Claude Desktop. Manual details: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) |
 | "bad token" error | Delete the hidden file `.houdini_mcp_token` in your user folder (e.g. `C:\Users\you`), then restart Houdini and Claude Desktop. It regenerates itself |
 | Docs search says "no doc server reachable" | Just open Houdini. Its manual server starts with the app |
 

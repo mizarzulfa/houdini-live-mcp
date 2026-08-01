@@ -47,6 +47,7 @@ houdini-live-mcp/
 ├── README.md
 ├── LICENSE                                  MIT
 ├── .gitignore
+├── setup.ps1                                Windows installer: uv sync + Houdini files + Claude config
 ├── server/                                  ← runs OUTSIDE Houdini (launched by Claude Desktop via uv)
 │   ├── pyproject.toml                         uv project; deps: mcp[cli], httpx, beautifulsoup4
 │   ├── uv.lock
@@ -68,6 +69,8 @@ houdini-live-mcp/
 > `$HOUDINI_USER_PREF_DIR` on Windows defaults to `Documents\houdini21.0` (match the folder to your major.minor version). On Linux it's `~/houdini21.0`, on macOS `~/Library/Preferences/houdini/21.0`. If you already have a `uiready.py`, merge instead of overwriting: append the contents of ours (the imports, the two functions, and the `hou.ui.addEventLoopCallback(_deferred_start)` line) to the end of your existing file.
 
 ## Installation
+
+On Windows, `setup.ps1` at the repo root automates sections 1, 2, and 4 below: it locates uv, runs `uv sync`, copies the two Houdini files into the newest `houdini<major>.<minor>` pref dir (refusing to overwrite a foreign `uiready.py`), and merges both server entries into `claude_desktop_config.json` wherever the install keeps it (probing both the normal and the Microsoft Store location), with a `.bak` backup. `-DryRun` previews without writing. The sections below are the manual path for Mac/Linux, or for debugging what the script did.
 
 ### 1. Clone and resolve the server environment
 
@@ -110,9 +113,13 @@ Edit `claude_desktop_config.json` (Claude Desktop → Settings → Developer →
 
 Use the full path to `uv`; Claude Desktop doesn't inherit your shell `PATH`.
 
-> **Windows Store install note:** if Claude Desktop was installed from the Microsoft Store, `%APPDATA%\Claude\claude_desktop_config.json` is virtualized to
-> `C:\Users\<you>\AppData\Local\Packages\Claude_<id>\LocalCache\Roaming\Claude\claude_desktop_config.json`.
-> Editing through the app's Settings UI always lands in the right place.
+> **Config location by install type** (the Settings UI's Edit Config button always lands in the right place):
+>
+> | Install | Path |
+> |---|---|
+> | Windows (normal) | `%APPDATA%\Claude\claude_desktop_config.json` |
+> | Windows (Microsoft Store) | `C:\Users\<you>\AppData\Local\Packages\Claude_<id>\LocalCache\Roaming\Claude\claude_desktop_config.json` (virtualized) |
+> | Mac | `~/Library/Application Support/Claude/claude_desktop_config.json` |
 
 ### 5. Restart both apps and verify
 
