@@ -88,7 +88,9 @@ Copy the two files from this project's `houdini/` folder into it, keeping the sa
 | `houdini/scripts/python/houdini_mcp_bridge.py` | `Documents\houdini21.0\scripts\python\` |
 | `houdini/python3.11libs/uiready.py` | `Documents\houdini21.0\python3.11libs\` |
 
-If a folder doesn't exist yet, just create it. (Already have a `uiready.py`? See the note in the file: merge, don't overwrite.)
+If a folder doesn't exist yet, just create it.
+
+> Rare case: if that last folder already contains a file named `uiready.py`, don't replace it (something else on your machine uses it too). [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) explains how to combine them. Most people will never hit this.
 
 ### Step 3: Set the password
 

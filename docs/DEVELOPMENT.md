@@ -65,7 +65,7 @@ houdini-live-mcp/
 | `houdini/scripts/python/houdini_mcp_bridge.py` | `$HOUDINI_USER_PREF_DIR/scripts/python/` <br>e.g. `C:\Users\<you>\Documents\houdini21.0\scripts\python\` | That directory is on Houdini's Python path, so `import houdini_mcp_bridge` works |
 | `houdini/python3.11libs/uiready.py` | `$HOUDINI_USER_PREF_DIR/python3.11libs/` <br>e.g. `C:\Users\<you>\Documents\houdini21.0\python3.11libs\` | Houdini executes `uiready.py` from `python3.11libs` when the interactive UI finishes loading; this is what auto-starts the bridge every session |
 
-> `$HOUDINI_USER_PREF_DIR` on Windows defaults to `Documents\houdini21.0` (match the folder to your major.minor version). On Linux it's `~/houdini21.0`, on macOS `~/Library/Preferences/houdini/21.0`. If you already have a `uiready.py`, merge the callback registration into yours instead of overwriting.
+> `$HOUDINI_USER_PREF_DIR` on Windows defaults to `Documents\houdini21.0` (match the folder to your major.minor version). On Linux it's `~/houdini21.0`, on macOS `~/Library/Preferences/houdini/21.0`. If you already have a `uiready.py`, merge instead of overwriting: append the contents of ours (the imports, the two functions, and the `hou.ui.addEventLoopCallback(_deferred_start)` line) to the end of your existing file.
 
 ## Installation
 
