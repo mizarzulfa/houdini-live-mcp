@@ -83,14 +83,11 @@ Requires [uv](https://docs.astral.sh/uv/). Python 3.13 is fetched automatically 
 
 Copy the two files under `houdini/` into your `$HOUDINI_USER_PREF_DIR` as per the table above.
 
-### 3. Set the shared secret
+### 3. The shared secret (automatic, nothing to do)
 
-The bridge only executes snippets carrying the right token. Change it **in both files** (they must match):
+The bridge only executes snippets carrying the right token. The token is auto-generated: whichever side runs first creates `~/.houdini_mcp_token` with a random 32-hex value, and both sides read that file fresh on every use (no caching, so start order doesn't matter). To rotate, delete the file and restart Houdini and Claude Desktop together.
 
-- `houdini/scripts/python/houdini_mcp_bridge.py` → `AUTH_TOKEN = "..."`
-- `server/houdini_live_mcp.py` → `AUTH_TOKEN = "..."`
-
-Port defaults to `8008` on `127.0.0.1` (`PORT` / `BIND_ADDRESS` in the bridge, `HOST` / `PORT` in the server; keep in sync too).
+Port defaults to `8008` on `127.0.0.1` (`PORT` / `BIND_ADDRESS` in the bridge, `HOST` / `PORT` in the server; keep in sync).
 
 ### 4. Register the servers with Claude Desktop
 
@@ -200,7 +197,7 @@ Doc server resolution: probes `127.0.0.1:48626` (embedded) then `:8080` (`hhelp 
 
 ## Security
 
-The bridge executes arbitrary Python inside your Houdini session; that is its job. It is guarded by (a) binding to `127.0.0.1` only, (b) a best-effort `allowed_hosts` restriction, and (c) the shared `AUTH_TOKEN`. **Change the token from the placeholder**, and don't port-forward 8008.
+The bridge executes arbitrary Python inside your Houdini session; that is its job. It is guarded by (a) binding to `127.0.0.1` only, (b) a best-effort `allowed_hosts` restriction, and (c) a shared token auto-generated into `~/.houdini_mcp_token` (per machine, random, never a known default; it also blocks CSRF-style requests from webpages poking localhost). Don't port-forward 8008, and don't commit or share the token file.
 
 ## Extending
 

@@ -30,6 +30,7 @@ Starting (once per session):
 
 import base64
 import json
+import os
 import threading
 import traceback
 
@@ -42,7 +43,29 @@ import hwebserver
 # ---------------------------------------------------------------------------
 PORT = 8008
 BIND_ADDRESS = "127.0.0.1"
-AUTH_TOKEN = "change-me-to-a-random-secret"     # must match the MCP server
+
+# Shared secret between this bridge and the MCP server. Auto-generated on
+# first use and stored in the user's home dir; both sides read the same file,
+# so no manual setup is needed. Delete the file to rotate the token (then
+# restart Houdini AND Claude Desktop so both sides re-read it).
+TOKEN_FILE = os.path.join(os.path.expanduser("~"), ".houdini_mcp_token")
+
+
+def _token():
+    """Read the shared token, creating it with a random value if absent.
+    Read fresh on every use (no caching) so bridge and server stay consistent
+    regardless of which side started first."""
+    try:
+        with open(TOKEN_FILE) as fp:
+            tok = fp.read().strip()
+    except OSError:
+        tok = ""
+    if not tok:
+        import secrets
+        tok = secrets.token_hex(16)
+        with open(TOKEN_FILE, "w") as fp:
+            fp.write(tok)
+    return tok
 
 _server = None       # the live hwebserver.Server instance
 _STARTED = False
@@ -107,7 +130,7 @@ def _exec(request):
     if request.method() != "POST":
         return hwebserver.errorResponse(request, "POST required", 405)
     form = request.POST()
-    if form.get("token", "") != AUTH_TOKEN:
+    if form.get("token", "") != _token():
         return hwebserver.errorResponse(request, "bad token", 403)
     try:
         code = base64.b64decode(form.get("payload", "")).decode("utf-8")

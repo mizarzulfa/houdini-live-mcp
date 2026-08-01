@@ -51,6 +51,7 @@ solver and dispatch a headless hython ROP out-of-process instead.
 
 import base64
 import json
+import os
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -62,11 +63,33 @@ from mcp.server.fastmcp import FastMCP, Image
 # ---------------------------------------------------------------------------
 HOST = "127.0.0.1"
 PORT = 8008
-AUTH_TOKEN = "change-me-to-a-random-secret"
 TIMEOUT = 30.0
 MAX_RESULT_CHARS = 20000        # guard the model's context from huge dumps
 
 BASE_URL = "http://%s:%d" % (HOST, PORT)
+
+# Shared secret with the bridge. Auto-generated on first use and stored in the
+# user's home dir; both sides read the same file, so no manual setup. Delete
+# the file to rotate (then restart Houdini AND Claude Desktop).
+TOKEN_FILE = os.path.join(os.path.expanduser("~"), ".houdini_mcp_token")
+
+
+def _token():
+    """Read the shared token, creating it with a random value if absent.
+    Read fresh on every use (no caching) so bridge and server stay consistent
+    regardless of which side started first."""
+    try:
+        with open(TOKEN_FILE) as fp:
+            tok = fp.read().strip()
+    except OSError:
+        tok = ""
+    if not tok:
+        import secrets
+        tok = secrets.token_hex(16)
+        with open(TOKEN_FILE, "w") as fp:
+            fp.write(tok)
+    return tok
+
 
 mcp = FastMCP("houdini-live")
 
@@ -96,7 +119,7 @@ def _exec(code):
     `_result`. Returns the decoded bridge response dict."""
     payload = base64.b64encode(code.encode("utf-8")).decode("ascii")
     data = urllib.parse.urlencode(
-        {"token": AUTH_TOKEN, "payload": payload}).encode("ascii")
+        {"token": _token(), "payload": payload}).encode("ascii")
     req = urllib.request.Request(
         BASE_URL + "/mcp/exec", data=data,
         headers={"Content-Type": "application/x-www-form-urlencoded"})

@@ -57,7 +57,7 @@ houdini-live-mcp/
 
 ## Setup
 
-Four steps. About 10 minutes.
+Three steps. About 10 minutes.
 
 ### Step 1: What you need first
 
@@ -92,16 +92,7 @@ If a folder doesn't exist yet, just create it.
 
 > Rare case: if that last folder already contains a file named `uiready.py`, don't replace it (something else on your machine uses it too). [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) explains how to combine them. Most people will never hit this.
 
-### Step 3: Set the password
-
-The bridge only listens to programs that know a shared password. Out of the box it's a placeholder, so change it to anything random, **the same in both files**:
-
-| File | Line to change |
-|---|---|
-| `Documents\houdini21.0\scripts\python\houdini_mcp_bridge.py` | `AUTH_TOKEN = "change-me-to-a-random-secret"` |
-| `server\houdini_live_mcp.py` (in this project) | `AUTH_TOKEN = "change-me-to-a-random-secret"` |
-
-### Step 4: Tell Claude Desktop about the servers
+### Step 3: Tell Claude Desktop about the servers
 
 Open Claude Desktop → **Settings → Developer → Edit Config**. This opens a file called `claude_desktop_config.json`.
 
@@ -135,7 +126,7 @@ Add this to the file, replacing the two kinds of paths with the real ones on **y
 - `command` = the full path to `uv` on your computer. Don't know it? Run `where uv` in a terminal (Mac/Linux: `which uv`)
 - `--directory` = the full path to this project's `server` folder, wherever you put it in Step 1
 
-Nothing else in this project is machine-specific: these two paths in the config are the only things you personalize (plus the password from Step 3).
+Nothing else in this project is machine-specific: these two paths in the config are the only things you personalize.
 
 Now restart **both** apps: Claude Desktop first, then Houdini.
 
@@ -160,13 +151,13 @@ flowchart TD
 |---|---|
 | Claude says it can't reach Houdini | Is Houdini actually open? Restart it and look for the `[mcp-bridge] listening` line in the Python Shell |
 | No `[mcp-bridge]` line at startup | The two files from Step 2 aren't in the right folders. Re-check the table |
-| Claude Desktop doesn't show the tools at all | The config from Step 4 has a wrong path. Both paths must be full absolute paths |
-| "bad token" error | The password in the two files doesn't match (Step 3) |
+| Claude Desktop doesn't show the tools at all | The config from Step 3 has a wrong path. Both paths must be full absolute paths |
+| "bad token" error | Delete the hidden file `.houdini_mcp_token` in your user folder (e.g. `C:\Users\you`), then restart Houdini and Claude Desktop. It regenerates itself |
 | Docs search says "no doc server reachable" | Just open Houdini. Its manual server starts with the app |
 
 ## Good to know
 
-- **Everything is local.** The bridge only accepts connections from your own computer (`127.0.0.1`), guarded by your password. Nothing is exposed to the internet.
+- **Everything is local.** The bridge only accepts connections from your own computer (`127.0.0.1`), guarded by a password the two sides generate and share automatically (a hidden file called `.houdini_mcp_token` in your user folder). Nothing is exposed to the internet, and you never have to set anything up.
 - **Claude can also *change* your scene** (that's the `run_python` tool). It's powerful (that's the point), but treat it like giving a colleague the keyboard: save your work.
 - Curious how it actually works, or want to add your own tools? → [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 
