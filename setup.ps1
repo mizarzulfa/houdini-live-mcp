@@ -126,6 +126,15 @@ try {
         $json = $cfg | ConvertTo-Json -Depth 10
         # WriteAllText writes UTF-8 without a BOM; a BOM can break JSON parsers.
         [System.IO.File]::WriteAllText($cfgPath, $json)
+        # PowerShell 5's JSON formatting is ugly (column-aligned indentation).
+        # Reformat with the Python that uv sync just installed; best effort,
+        # the file is already valid JSON either way.
+        $py = Join-Path $server ".venv\Scripts\python.exe"
+        if (Test-Path $py) {
+            try {
+                & $py -c "import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding='utf-8-sig')); open(p,'w',encoding='utf-8').write(json.dumps(d,indent=2))" $cfgPath 2>$null
+            } catch {}
+        }
         Info "previous config backed up to claude_desktop_config.json.bak"
     }
     Done "registered both servers in: $cfgPath"
