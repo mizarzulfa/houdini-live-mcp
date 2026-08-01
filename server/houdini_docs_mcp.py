@@ -9,7 +9,7 @@ Setup:
 
 Doc server resolution (no manual step required in the common case):
     1. Houdini's embedded help server, which auto-starts when the app is open.
-       Default port 48626. This is the zero-effort path — just open Houdini.
+       Default port 48626. This is the zero-effort path -- just open Houdini.
     2. Fallback: a manually started `hhelp serve --host=127.0.0.1 --port=8080`
        for headless / dev setups where the embedded UI server isn't present.
 
@@ -54,8 +54,8 @@ DOC_CANDIDATES = (
 # category: empty = all, or 'vex', 'node/sop', 'node/dop', '_' (user guide), etc.
 SEARCH_PARAMS = "sequence=1&permanent=false&lang=en"
 
-PROBE_TIMEOUT = 1.5   # seconds — probe must be cheap; runs on cold cache only
-FETCH_TIMEOUT = 5     # seconds — real content fetches
+PROBE_TIMEOUT = 1.5   # seconds -- probe must be cheap; runs on cold cache only
+FETCH_TIMEOUT = 5     # seconds -- real content fetches
 
 NOT_REACHABLE = (
     "No Houdini doc server reachable.\n"
@@ -157,8 +157,8 @@ def parse_search_fragment(html: str) -> str:
     Parse the /_search HTML fragment.
 
     Structure:
-      .instants      — top instant matches (VEX functions show signatures here)
-      .search-category sections — categorized hits with href paths
+      .instants      -- top instant matches (VEX functions show signatures here)
+      .search-category sections -- categorized hits with href paths
     """
     soup = BeautifulSoup(html, "html.parser")
     lines = []
@@ -169,7 +169,7 @@ def parse_search_fragment(html: str) -> str:
         lines.append(stats.get_text(strip=True))
         lines.append("")
 
-    # Instant results — highest value, include inline signatures
+    # Instant results -- highest value, include inline signatures
     instants = soup.find("div", class_="instants")
     if instants:
         lines.append("=== TOP MATCHES ===")
@@ -216,7 +216,7 @@ def search_docs(query: str, category: str = "") -> str:
     """
     Search local Houdini docs via /_search endpoint.
     Returns instant matches (with VEX signatures inline) and categorized results with exact paths.
-    Use returned paths with get_doc_page() — never guess paths.
+    Use returned paths with get_doc_page() -- never guess paths.
 
     Args:
         query:    search terms, e.g. 'pcfind', 'muscle solver', 'vellum constraint weld'
@@ -234,7 +234,7 @@ def search_docs(query: str, category: str = "") -> str:
 def get_doc_page(path: str) -> str:
     """
     Fetch a Houdini doc page by its exact path.
-    Always get the path from search_docs() — do not construct paths manually.
+    Always get the path from search_docs() -- do not construct paths manually.
 
     Examples (as returned by search_docs):
         'vex/functions/pcfind'
@@ -254,7 +254,7 @@ def get_doc_page(path: str) -> str:
 def get_vex_function(name: str) -> str:
     """
     Fetch VEX function docs. Tries direct path first, falls back to search.
-    For VEX functions, search_docs() also returns signatures inline in TOP MATCHES —
+    For VEX functions, search_docs() also returns signatures inline in TOP MATCHES --
     often enough without needing get_doc_page() at all.
 
     Examples: name='pcfind', 'xyzdist', 'nearpoints', 'addpoint', 'primuv'
