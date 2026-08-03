@@ -27,13 +27,11 @@ No copy-pasting. Claude checked for itself.
 
 ```mermaid
 flowchart LR
-    A["You<br/>(chatting)"] --> B["Claude Desktop"]
+    A["You,<br/>chatting"] --> B["Claude<br/>Desktop"]
     B --> C["houdini-docs<br/><i>reads the manual</i>"]
     B --> D["houdini-live<br/><i>reads your scene</i>"]
-    C --> E["Houdini's built-in<br/>help server"]
-    D --> F["A tiny 'bridge' running<br/>inside Houdini"]
-    E --> G["Houdini<br/>(open on your PC)"]
-    F --> G
+    C --> E["Houdini,<br/>open on your PC"]
+    D --> E
 ```
 
 Plain version: Claude Desktop starts the two small programs in the `server/` folder. One talks to Houdini's built-in manual. The other talks to a small "bridge" that runs inside Houdini and answers questions about your scene. Everything stays on your computer. Nothing goes online.
@@ -106,16 +104,37 @@ That's it. They stay on for future chats.
 
 ## Did it work?
 
+Two quick checks, thirty seconds total:
+
 ```mermaid
-flowchart TD
-    A["Start Houdini"] --> B{"Python Shell says<br/>'[mcp-bridge] listening…'?"}
-    B -- yes --> C["Ask Claude:<br/>'ping my houdini'"]
-    B -- no --> D["In Houdini's Python Shell run:<br/>import houdini_mcp_bridge<br/>houdini_mcp_bridge.start()"]
-    D --> C
-    C --> E{"Claude reports your<br/>Houdini version + hip file?"}
-    E -- yes --> F["Done. Ask it anything<br/>about your scene."]
-    E -- no --> G["See 'Something broken?'<br/>below"]
+flowchart LR
+    A["<b>Check 1 — Houdini</b><br/>the Python Shell shows<br/>a 'listening' message"] --> B["<b>Check 2 — Claude</b><br/>you ask:<br/>'ping my houdini'"] --> C["<b>It works ✅</b><br/>Claude replies with your<br/>Houdini version + scene"]
 ```
+
+### Check 1: Houdini started the bridge
+
+Start Houdini and open its Python Shell (top menu: **Windows ▸ Python Shell**). Look for this line:
+
+```
+[mcp-bridge] listening on http://127.0.0.1:8008
+```
+
+> Don't see it? Paste this into that same Python Shell and press Enter:
+> `import houdini_mcp_bridge; houdini_mcp_bridge.start()`
+>
+> It answers with either the `listening` line (started just now) or `already started` (it was fine all along) — both are good. A red error instead? Run **setup.ps1** again.
+
+### Check 2: Claude can reach it
+
+In Claude Desktop, ask:
+
+> **You:** ping my houdini
+>
+> **Claude:** *checks* … "You're on Houdini 21.0.440, and your scene `donut_v12.hip` is open."
+
+If Claude answers with your Houdini version and your scene's name, you're done — it is genuinely looking at *your* Houdini. Ask it anything.
+
+If either check failed, the table below has the fix.
 
 ## Something broken?
 
