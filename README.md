@@ -1,6 +1,13 @@
-# houdini-live-mcp
+```text
+ _                _ _      _     _ _
+| |_  ___ _  _ __| (_)_ _ (_)___| (_)_ _____ ___ _ __  __ _ __
+| ' \/ _ \ || / _` | | ' \| |___| | \ V / -_)___| '  \/ _| '_ \
+|_||_\___/\_,_\__,_|_|_||_|_|   |_|_|\_/\___|   |_|_|_\__| .__/
+                                                         |_|
+```
 
 **Let Claude see inside your Houdini.**
+<br><sub><a href="https://modelcontextprotocol.io/"><img src="https://cdn.simpleicons.org/modelcontextprotocol/000000/ffffff" height="14" alt="MCP"> built on the Model Context Protocol</a></sub>
 
 Normally, when you ask Claude about your Houdini scene, you have to copy-paste code and describe everything yourself. This project removes that step. Claude can look at your scene, read your VEX, check your sim, and even take a screenshot of your viewport, all by itself.
 
