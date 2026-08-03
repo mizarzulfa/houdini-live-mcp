@@ -57,8 +57,6 @@ houdini-live-mcp/
 
 ## Setup
 
-Three steps. About 5 minutes.
-
 ### Step 1: What you need first
 
 - **Houdini** (built on 21.0; other recent versions likely work)
@@ -96,15 +94,13 @@ When it says **Setup complete**, you're done here. It's safe to run again any ti
 2. In Claude Desktop, open a chat and click the **+** (plus) button, then **Connectors**.
 3. You should now see **houdini-docs** and **houdini-live** in the list. Turn both toggles **on**.
 
-That's it. They stay on for future chats.
+They stay on for future chats.
 
 > Not in the list at all? Run setup.ps1 again and read its output, then restart Claude Desktop again.
 
 ---
 
 ## Did it work?
-
-Two quick checks, thirty seconds total:
 
 ```mermaid
 flowchart LR
@@ -132,7 +128,7 @@ In Claude Desktop, ask:
 >
 > **Claude:** *checks* … "You're on Houdini 21.0.440, and your scene `donut_v12.hip` is open."
 
-If Claude answers with your Houdini version and your scene's name, you're done — it is genuinely looking at *your* Houdini. Ask it anything.
+A reply with your real version and scene name is the proof: Claude is reading *your* Houdini.
 
 If either check failed, the table below has the fix.
 
